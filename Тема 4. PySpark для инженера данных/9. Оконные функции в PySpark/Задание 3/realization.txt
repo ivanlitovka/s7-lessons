@@ -1,2 +1,40 @@
-Замените эту строку результатом вывода, который требуется в задании.
-Сохраните исходное форматирование вывода без Markdown-ограждений.
++------------+------+
+|message_from|lag_7 |
++------------+------+
+|155747      |121581|
+|155747      |25843 |
+|155747      |24666 |
+|155747      |29338 |
+|155058      |70776 |
+|155058      |37570 |
+|155058      |70063 |
+|155058      |121908|
+|155058      |12334 |
+|155058      |70796 |
++------------+------+
+only showing top 10 rows
+
+import pyspark
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+                    .master("local") \
+                    .appName("Learning DataFrames") \
+                    .getOrCreate()
+events = spark.read.json("/user/master/data/events/date=2022-05-01").cache()
+
+
+# 1. Фильтруем только сообщения, где получатель — физическое лицо (message_to не NULL)
+window = Window().partitionBy('event.message_from').orderBy('event.message_ts')
+
+# lag_7 = получатель 7 сообщений назад
+dfWithLag = events.withColumn("lag_7", F.lag("event.message_to", 7).over(window))
+
+# Вывод: две колонки, фильтр null, сортировка по message_to по убыванию
+dfWithLag.select(
+    F.col("event.message_from").alias("message_from"),
+    F.col("lag_7")
+) \
+    .filter(F.col("lag_7").isNotNull()) \
+    .orderBy(F.col("message_from").desc()) \
+    .show(10, False)

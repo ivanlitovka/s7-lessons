@@ -1,2 +1,30 @@
-Замените эту строку результатом вывода, который требуется в задании.
-Сохраните исходное форматирование вывода без Markdown-ограждений.
++--------------------+------------+----------+
+|               event|  event_type|      date|
++--------------------+------------+----------+
+|{[19342], 987160,...|     message|2022-05-31|
+|{null, null, 2022...|subscription|2022-05-31|
+|{[26358], 247511,...|     message|2022-05-31|
+|{[79792], 748847,...|     message|2022-05-31|
+|{null, null, 2022...|subscription|2022-05-31|
+|{null, null, 2022...|subscription|2022-05-31|
+|{[151897], 396845...|     message|2022-05-31|
+|{null, null, 2022...|subscription|2022-05-31|
+|{null, null, 2022...|subscription|2022-05-31|
+|{null, null, 2022...|subscription|2022-05-31|
++--------------------+------------+----------+
+
+import pyspark
+from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
+
+spark = SparkSession.builder \
+                    .master("local") \
+                    .appName("Learning DataFrames") \
+                    .getOrCreate()
+events = spark.read.json("/user/master/data/events/date=2022-05-31").cache()
+
+events.write.format('parquet').mode('overwrite').save("/user/s1414928/data/events/date=2022-05-31")
+df = spark.read.parquet('/user/s1414928/data/events')
+df.orderBy(F.col('event.datetime').desc()).show(10)
+
+
