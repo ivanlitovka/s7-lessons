@@ -18,7 +18,7 @@ def main():
     events = sql.read.json(f"{base_input_path}/date={date}")
 
     # Напишите директорию записи
-    events.write.partitionBy('event_type').format(
+    events.write.mode('overwrite')partitionBy('event_type').format(
         'parquet').save(f'{base_output_path}/date={date}')
 
 
