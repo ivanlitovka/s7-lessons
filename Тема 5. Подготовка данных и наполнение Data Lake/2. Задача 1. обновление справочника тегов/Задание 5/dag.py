@@ -20,7 +20,7 @@ default_args = {
     'retry_delay': datetime.timedelta(minutes=5),
 }
 
-# ⚠️ ИМЕННО ТАК, как ожидает проверка:
+
 dag_spark = DAG(
     dag_id='sparkoperator',
     default_args=default_args,

@@ -119,7 +119,7 @@ def main():
     )
 
     # ⬇⬇⬇ ЗДЕСЬ ВСЕ ОБРАЩЕНИЯ К ПОЛЯМ — ЧЕРЕЗ event.* ⬇⬇⬇
-    posts = events.filter(F.col("event_type") == "post")
+    posts = events.filter(F.col("event_type") == "message")
     reactions = events.filter(F.col("event_type") == "reaction")
 
     # message_id -> все теги этого сообщения

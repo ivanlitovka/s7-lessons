@@ -1,10 +1,10 @@
 """Отправка задания de07050306 в сервис проверок."""
+from submit_client import submit
 from pathlib import Path
 import sys
 
 # Корень s7-lessons; работает и при запуске из другого рабочего каталога.
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-from submit_client import submit
 
 TASK_ID = 'de07050306'
 ENDPOINT = '/api/v1/checks/de07050306_airflow_dag/'
